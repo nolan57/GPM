@@ -29,14 +29,13 @@ namespace GPM
             // 注册视图和视图模型以支持导航
             containerRegistry.RegisterForNavigation<ProjectView, ProjectViewModel>();
             containerRegistry.RegisterForNavigation<TaskView, TaskViewModel>();
+            containerRegistry.RegisterForNavigation<GanttChartView, GanttChartViewModel>();
             containerRegistry.RegisterForNavigation<PluginView, PluginViewModel>();
-            containerRegistry.RegisterForNavigation<TimeScalingView, TimeScalingViewModel>();
             
             // 注册服务
             containerRegistry.Register<IProjectService, ProjectService>();
             containerRegistry.Register<ITaskService, TaskService>();
             containerRegistry.Register<IPluginService, PluginService>();
-            containerRegistry.Register<ITimeScalingService, TimeScalingService>();
         }
     }
 

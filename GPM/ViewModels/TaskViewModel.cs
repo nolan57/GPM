@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GPM.Models;
 using GPM.Services;
+using Task = GPM.Models.Task;
 
 namespace GPM.ViewModels
 {
@@ -13,8 +14,8 @@ namespace GPM.ViewModels
     {
         private readonly ITaskService _taskService;
 
-        private List<TaskModel> _tasks = null!;
-        public List<TaskModel> Tasks
+        private List<Task> _tasks = null!;
+        public List<Task> Tasks
         {
             get { return _tasks; }
             set { SetProperty(ref _tasks, value); }

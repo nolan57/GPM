@@ -111,30 +111,7 @@ namespace GPM.Services
                 context.Projects.AddRange(projects);
                 context.SaveChanges();
 
-                // 添加一些TaskModel数据
-                var taskModels = new List<TaskModel>
-                {
-                    new TaskModel
-                    {
-                        Name = "项目启动会议",
-                        Description = "召开项目启动会议，明确项目目标和分工",
-                        StartDate = DateTime.Now,
-                        EndDate = DateTime.Now.AddDays(1),
-                        Progress = 0.0
-                    },
-                    new TaskModel
-                    {
-                        Name = "技术选型",
-                        Description = "选择适合项目的技术栈",
-                        StartDate = DateTime.Now.AddDays(1),
-                        EndDate = DateTime.Now.AddDays(3),
-                        Progress = 0.0
-                    }
-                };
 
-                // 添加TaskModel到数据库
-                context.TaskModels.AddRange(taskModels);
-                context.SaveChanges();
             }
         }
     }
