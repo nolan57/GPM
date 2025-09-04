@@ -1,0 +1,45 @@
+# Visual Studio files
+.vs/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+*.cache
+*.user
+
+# Package directories
+packages/
+*.nupkg
+
+# Logs
+*.log
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Testing
+TestResults/
+
+# Documentation
+*.userprefs
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Database
+*.db
+*.mdf
+*.ldf
+
+# GPM specific
+.trae/

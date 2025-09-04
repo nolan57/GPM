@@ -1,0 +1,44 @@
+<UserControl x:Class="GPM.Views.PluginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GPM.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="图形标识插件" FontSize="20" FontWeight="Bold" Margin="10"/>
+        
+        <StackPanel Grid.Row="1" Margin="10" HorizontalAlignment="Left">
+            <ListBox ItemsSource="{Binding AnnotationPlugins}" 
+                     Name="PluginListBox" 
+                     Width="300" 
+                     Height="400" 
+                     SelectedItem="{Binding SelectedPlugin}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Description}" FontSize="12" Foreground="Gray"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
+            <Button Content="创建标识" Margin="0,10,0,0" Width="100" 
+                    Command="{Binding CreateAnnotationCommand}" 
+                    CommandParameter="{Binding ElementName=PluginListBox, Path=SelectedItem}"/>
+        </StackPanel>
+        
+        <ContentControl Grid.Row="1" 
+                        Content="{Binding SelectedPluginControl}"
+                        Margin="320,10,10,10" 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch"/>
+    </Grid>
+</UserControl>
