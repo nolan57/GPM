@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task = GPM.Models.Task;
 
 namespace GPM.Services
 {
     public interface ITaskService
     {
-        List<TaskModel> GetTasksByProjectId(int projectId);
-        TaskModel GetTaskById(int id);
-        void AddTask(TaskModel task);
-        void UpdateTask(TaskModel task);
+        List<Task> GetTasksByProjectId(int projectId);
+        Task GetTaskById(int id);
+        void AddTask(Task task);
+        void UpdateTask(Task task);
         void DeleteTask(int id);
     }
 }

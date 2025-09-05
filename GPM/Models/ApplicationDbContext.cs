@@ -12,7 +12,7 @@ namespace GPM.Models
         public DbSet<Project> Projects { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
-        public DbSet<TaskModel> TaskModels { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,8 +32,7 @@ namespace GPM.Models
                 .WithOne()
                 .HasForeignKey("TaskId");
 
-            // 为Task和TaskModel添加映射配置
-            modelBuilder.Entity<TaskModel>().ToTable("TaskModels");
+
         }
     }
 }

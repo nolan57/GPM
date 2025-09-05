@@ -16,7 +16,6 @@ namespace GPM.ViewModels
     {
         private readonly IProjectService _projectService;
         private readonly IPluginService _pluginService;
-        private readonly ITimeScalingService _timeScalingService;
         private readonly IRegionManager _regionManager;
 
         private string _title = "GPM -甘特图项目管理软件";
@@ -43,11 +42,10 @@ namespace GPM.ViewModels
         public DelegateCommand<string> NavigateCommand { get; private set; }
 
         public MainViewModel(IProjectService projectService, ITaskService taskService, IPluginService pluginService, 
-                            ITimeScalingService timeScalingService, IRegionManager regionManager)
+                            IRegionManager regionManager)
         {
             _projectService = projectService;
             _pluginService = pluginService;
-            _timeScalingService = timeScalingService;
             _regionManager = regionManager;
 
             // 初始化导航命令
@@ -66,8 +64,8 @@ namespace GPM.ViewModels
             {
                 new NavigationItem("项目管理", "ProjectView"),
                 new NavigationItem("任务管理", "TaskView"),
-                new NavigationItem("插件管理", "PluginView"),
-                new NavigationItem("时间缩放", "TimeScalingView")
+                new NavigationItem("甘特图", "GanttChartView"),
+                new NavigationItem("插件管理", "PluginView")
             };
         }
 
