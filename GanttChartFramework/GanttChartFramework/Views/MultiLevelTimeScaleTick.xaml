@@ -1,0 +1,81 @@
+<UserControl x:Class="GanttChartFramework.Views.MultiLevelTimeScaleTick"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="100">
+    <Grid x:Name="MainContainer">
+        <StackPanel x:Name="TimeLevelsPanel" Orientation="Vertical">
+            <!-- 年份级别 -->
+            <TextBlock x:Name="YearTextBlock" 
+                       Text="{Binding YearText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       FontSize="{Binding YearFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{Binding YearForeground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       HorizontalAlignment="{Binding YearHorizontalAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="{Binding YearMargin, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Visibility="{Binding ShowYear, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            
+            <!-- 季度级别 -->
+            <TextBlock x:Name="QuarterTextBlock" 
+                       Text="{Binding QuarterText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       FontSize="{Binding QuarterFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{Binding QuarterForeground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       HorizontalAlignment="{Binding QuarterHorizontalAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="{Binding QuarterMargin, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Visibility="{Binding ShowQuarter, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            
+            <!-- 月份级别 -->
+            <TextBlock x:Name="MonthTextBlock" 
+                       Text="{Binding MonthText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       FontSize="{Binding MonthFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{Binding MonthForeground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       HorizontalAlignment="{Binding MonthHorizontalAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="{Binding MonthMargin, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Visibility="{Binding ShowMonth, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            
+            <!-- 周级别 -->
+            <TextBlock x:Name="WeekTextBlock" 
+                       Text="{Binding WeekText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       FontSize="{Binding WeekFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{Binding WeekForeground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       HorizontalAlignment="{Binding WeekHorizontalAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="{Binding WeekMargin, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Visibility="{Binding ShowWeek, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            
+            <!-- 日期级别 -->
+            <TextBlock x:Name="DayTextBlock" 
+                       Text="{Binding DayText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       FontSize="{Binding DayFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{Binding DayForeground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       HorizontalAlignment="{Binding DayHorizontalAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="{Binding DayMargin, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Visibility="{Binding ShowDay, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            
+            <!-- 时间级别 -->
+            <TextBlock x:Name="TimeTextBlock" 
+                       Text="{Binding TimeText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       FontSize="{Binding TimeFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="{Binding TimeForeground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       HorizontalAlignment="{Binding TimeHorizontalAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Margin="{Binding TimeMargin, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Visibility="{Binding ShowTime, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+        
+        <!-- 左侧刻度线 -->
+        <Line x:Name="LeftTickLine" 
+              X1="0" Y1="0" X2="0" Y2="60"
+              Stroke="{Binding TickStroke, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              StrokeThickness="{Binding TickThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              StrokeDashArray="{Binding TickDashArray, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              VerticalAlignment="Stretch"/>
+        
+        <!-- 右侧刻度线 -->
+        <Line x:Name="RightTickLine" 
+              X1="0" Y1="0" X2="0" Y2="60"
+              Stroke="{Binding TickStroke, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              StrokeThickness="{Binding TickThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              StrokeDashArray="{Binding TickDashArray, RelativeSource={RelativeSource AncestorType=UserControl}}"
+              VerticalAlignment="Stretch"/>
+    </Grid>
+</UserControl>

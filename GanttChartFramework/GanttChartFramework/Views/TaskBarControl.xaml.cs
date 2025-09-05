@@ -270,13 +270,16 @@ namespace GanttChartFramework.Views
             int startDay = (task.StartDay - DateTime.Now).Days + 1;
             double taskX = 50 + (startDay - 1) * widthPerDay + indentation;
             
+            // 获取任务颜色，如果为null则使用默认颜色
+            Brush taskColor = task.Color ?? Brushes.Blue;
+            
             // 创建任务条背景
             var taskBarBackground = new Rectangle
             {
                 Width = taskWidth,
                 Height = TaskHeight - 10,
-                Fill = new SolidColorBrush(((SolidColorBrush)task.Color).Color),
-                Stroke = task.Color,
+                Fill = new SolidColorBrush(((SolidColorBrush)taskColor).Color),
+                Stroke = taskColor,
                 StrokeThickness = 1,
                 RadiusX = 3,
                 RadiusY = 3,
@@ -290,7 +293,7 @@ namespace GanttChartFramework.Views
                 {
                     Width = taskWidth * task.Progress / 100,
                     Height = TaskHeight - 10,
-                    Fill = new SolidColorBrush(((SolidColorBrush)task.Color).Color),
+                    Fill = new SolidColorBrush(((SolidColorBrush)taskColor).Color),
                     RadiusX = 3,
                     RadiusY = 3,
                     Margin = new Thickness(taskX, y + 5, 0, 0)

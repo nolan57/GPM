@@ -8,6 +8,18 @@
         mc:Ignorable="d"
         Title="甘特图框架示例" Height="600" Width="1000">
     <Grid>
-        <gantt:GanttChartContainer x:Name="GanttChart" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 工具栏 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <Button Content="自定义刻度示例" Click="CustomTicks_Click" Margin="5" Padding="10,5"/>
+            <Button Content="多级时间刻度示例" Click="MultiLevelTimeScale_Click" Margin="5" Padding="10,5"/>
+        </StackPanel>
+        
+        <!-- 甘特图容器 -->
+        <gantt:GanttChartContainer Grid.Row="1" x:Name="GanttChart" />
     </Grid>
 </Window>

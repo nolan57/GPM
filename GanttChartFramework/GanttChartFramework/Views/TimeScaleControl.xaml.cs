@@ -21,8 +21,9 @@ namespace GanttChartFramework.Views
             DependencyProperty.Register("FontSize", typeof(double), typeof(TimeScaleControl),
                 new PropertyMetadata(13.0));
         
-        public static readonly DependencyProperty TimeScaleTypeProperty = 
-            DependencyProperty.Register("TimeScaleType", typeof(string), typeof(TimeScaleControl),
+        // 时间粒度依赖属性
+        public static readonly DependencyProperty TimeScaleTypeProperty =
+            DependencyProperty.Register("TimeScaleType", typeof(string), typeof(TimeScaleControl), 
                 new PropertyMetadata("Day", OnTimeScaleTypeChanged));
         
         public static new readonly DependencyProperty WidthProperty = 
@@ -107,6 +108,9 @@ namespace GanttChartFramework.Views
                 case "Quarter":
                     DrawQuarterlyTimeScale();
                     break;
+                case "MultiLevel":
+                    DrawMultiLevelTimeScale();
+                    break;
             }
         }
         
@@ -114,26 +118,21 @@ namespace GanttChartFramework.Views
         {
             for (int i = 0; i < 30; i++)
             {
-                var dayLine = new Line
+                var tickControl = new TimeScaleTickControl
                 {
-                    X1 = i * 60 + 50,
-                    Y1 = 0,
-                    X2 = i * 60 + 50,
-                    Y2 = 30,
-                    Stroke = Foreground,
-                    StrokeThickness = 1
+                    TickStroke = Foreground,
+                    TickThickness = 1,
+                    LabelText = (i + 1).ToString(),
+                    LabelFontSize = FontSize,
+                    LabelForeground = Foreground,
+                    Width = 60,
+                    Height = 30
                 };
                 
-                var dayLabel = new TextBlock
-                {
-                    Text = (i + 1).ToString(),
-                    FontSize = FontSize,
-                    Foreground = Foreground,
-                    Margin = new Thickness(i * 60 + 45, 15, 0, 0)
-                };
+                Canvas.SetLeft(tickControl, i * 60 + 20);
+                Canvas.SetTop(tickControl, 0);
                 
-                TimeScaleCanvas.Children.Add(dayLine);
-                TimeScaleCanvas.Children.Add(dayLabel);
+                TimeScaleCanvas.Children.Add(tickControl);
             }
         }
         
@@ -141,26 +140,21 @@ namespace GanttChartFramework.Views
         {
             for (int i = 0; i < 4; i++)
             {
-                var weekLine = new Line
+                var tickControl = new TimeScaleTickControl
                 {
-                    X1 = i * 150 + 50,
-                    Y1 = 0,
-                    X2 = i * 150 + 50,
-                    Y2 = 30,
-                    Stroke = Foreground,
-                    StrokeThickness = 2
+                    TickStroke = Foreground,
+                    TickThickness = 2,
+                    LabelText = $"第{i + 1}周",
+                    LabelFontSize = FontSize,
+                    LabelForeground = Foreground,
+                    Width = 150,
+                    Height = 30
                 };
                 
-                var weekLabel = new TextBlock
-                {
-                    Text = $"第{i + 1}周",
-                    FontSize = FontSize,
-                    Foreground = Foreground,
-                    Margin = new Thickness(i * 150 + 45, 15, 0, 0)
-                };
+                Canvas.SetLeft(tickControl, i * 150 + 20);
+                Canvas.SetTop(tickControl, 0);
                 
-                TimeScaleCanvas.Children.Add(weekLine);
-                TimeScaleCanvas.Children.Add(weekLabel);
+                TimeScaleCanvas.Children.Add(tickControl);
             }
         }
         
@@ -169,26 +163,21 @@ namespace GanttChartFramework.Views
             string[] months = { "一月", "二月", "三月", "四月" };
             for (int i = 0; i < 4; i++)
             {
-                var monthLine = new Line
+                var tickControl = new TimeScaleTickControl
                 {
-                    X1 = i * 300 + 50,
-                    Y1 = 0,
-                    X2 = i * 300 + 50,
-                    Y2 = 30,
-                    Stroke = Foreground,
-                    StrokeThickness = 2
+                    TickStroke = Foreground,
+                    TickThickness = 2,
+                    LabelText = months[i],
+                    LabelFontSize = FontSize,
+                    LabelForeground = Foreground,
+                    Width = 300,
+                    Height = 30
                 };
                 
-                var monthLabel = new TextBlock
-                {
-                    Text = months[i],
-                    FontSize = FontSize,
-                    Foreground = Foreground,
-                    Margin = new Thickness(i * 300 + 45, 15, 0, 0)
-                };
+                Canvas.SetLeft(tickControl, i * 300 + 20);
+                Canvas.SetTop(tickControl, 0);
                 
-                TimeScaleCanvas.Children.Add(monthLine);
-                TimeScaleCanvas.Children.Add(monthLabel);
+                TimeScaleCanvas.Children.Add(tickControl);
             }
         }
         
@@ -196,26 +185,150 @@ namespace GanttChartFramework.Views
         {
             for (int i = 0; i < 4; i++)
             {
-                var quarterLine = new Line
+                var tickControl = new TimeScaleTickControl
                 {
-                    X1 = i * 600 + 50,
-                    Y1 = 0,
-                    X2 = i * 600 + 50,
-                    Y2 = 30,
-                    Stroke = Foreground,
-                    StrokeThickness = 3
+                    TickStroke = Foreground,
+                    TickThickness = 3,
+                    LabelText = $"第{i + 1}季度",
+                    LabelFontSize = FontSize,
+                    LabelForeground = Foreground,
+                    Width = 600,
+                    Height = 30
                 };
                 
-                var quarterLabel = new TextBlock
+                Canvas.SetLeft(tickControl, i * 600 + 20);
+                Canvas.SetTop(tickControl, 0);
+                
+                TimeScaleCanvas.Children.Add(tickControl);
+            }
+        }
+        
+        // 绘制多级时间刻度
+        private void DrawMultiLevelTimeScale()
+        {
+            // 示例：显示30天的多级时间刻度
+            for (int i = 0; i < 30; i++)
+            {
+                var date = DateTime.Now.AddDays(i);
+                
+                var multiTick = new MultiLevelTimeScaleTick
                 {
-                    Text = $"第{i + 1}季度",
-                    FontSize = FontSize,
-                    Foreground = Foreground,
-                    Margin = new Thickness(i * 600 + 45, 15, 0, 0)
+                    YearText = date.Year.ToString(),
+                    QuarterText = $"Q{(date.Month - 1) / 3 + 1}",
+                    MonthText = date.ToString("MMM"),
+                    WeekText = $"第{GetWeekNumber(date)}周",
+                    DayText = date.Day.ToString(),
+                    TimeText = date.ToString("HH:mm"),
+                    
+                    ShowYear = true,
+                    ShowQuarter = i % 7 == 0, // 每周显示季度
+                    ShowMonth = true,
+                    ShowWeek = i % 7 == 0,    // 每周显示周
+                    ShowDay = true,
+                    ShowTime = false,
+                    
+                    YearFontSize = 12,
+                    YearForeground = Brushes.DarkBlue,
+                    QuarterFontSize = 11,
+                    QuarterForeground = Brushes.DarkGreen,
+                    MonthFontSize = 11,
+                    MonthForeground = Brushes.DarkRed,
+                    WeekFontSize = 10,
+                    WeekForeground = Brushes.Purple,
+                    DayFontSize = 12,
+                    DayForeground = Foreground,
+                    
+                    TickStroke = Foreground,
+                    TickThickness = 1,
+                    Width = 80,
+                    Height = 60
                 };
                 
-                TimeScaleCanvas.Children.Add(quarterLine);
-                TimeScaleCanvas.Children.Add(quarterLabel);
+                Canvas.SetLeft(multiTick, i * 80 + 20);
+                Canvas.SetTop(multiTick, 0);
+                
+                TimeScaleCanvas.Children.Add(multiTick);
+            }
+        }
+        
+        private int GetWeekNumber(DateTime date)
+        {
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            return culture.Calendar.GetWeekOfYear(date, 
+                System.Globalization.CalendarWeekRule.FirstFourDayWeek, 
+                DayOfWeek.Monday);
+        }
+        
+        // 方法：初始化多级时间刻度（使用配置）
+        public void InitializeMultiLevelTimeScale(Models.TimeScaleConfig config)
+        {
+            TimeScaleCanvas.Children.Clear();
+            TimeScaleCanvas.Width = Width;
+            
+            config.GenerateTimeUnits();
+            
+            double tickWidth = 80; // 默认刻度宽度
+            double spacing = 20;   // 间距
+            
+            for (int i = 0; i < config.TimeUnits.Count; i++)
+            {
+                var timeUnit = config.TimeUnits[i];
+                
+                var multiTick = new MultiLevelTimeScaleTick
+                {
+                    YearText = timeUnit.Year,
+                    QuarterText = timeUnit.Quarter,
+                    MonthText = timeUnit.Month,
+                    WeekText = timeUnit.Week,
+                    DayText = timeUnit.Day,
+                    TimeText = timeUnit.Time,
+                    
+                    ShowYear = config.DisplayOptions.ShowYearLevel,
+                    ShowQuarter = config.DisplayOptions.ShowQuarterLevel,
+                    ShowMonth = config.DisplayOptions.ShowMonthLevel,
+                    ShowWeek = config.DisplayOptions.ShowWeekLevel,
+                    ShowDay = config.DisplayOptions.ShowDayLevel,
+                    ShowTime = config.DisplayOptions.ShowTimeLevel,
+                    
+                    LayoutOrientation = config.DisplayOptions.TimeUnitsOrientation,
+                    MaxRows = config.DisplayOptions.MaxDisplayRows,
+                    LevelMargin = config.DisplayOptions.LevelMargin,
+                    
+                    YearFontSize = config.DisplayOptions.YearFontSize,
+                    YearForeground = config.DisplayOptions.YearForeground,
+                    YearHorizontalAlignment = config.DisplayOptions.YearHorizontalAlignment,
+                    YearMargin = config.DisplayOptions.YearMargin,
+                    QuarterFontSize = config.DisplayOptions.QuarterFontSize,
+                    QuarterForeground = config.DisplayOptions.QuarterForeground,
+                    QuarterHorizontalAlignment = config.DisplayOptions.QuarterHorizontalAlignment,
+                    QuarterMargin = config.DisplayOptions.QuarterMargin,
+                    MonthFontSize = config.DisplayOptions.MonthFontSize,
+                    MonthForeground = config.DisplayOptions.MonthForeground,
+                    MonthHorizontalAlignment = config.DisplayOptions.MonthHorizontalAlignment,
+                    MonthMargin = config.DisplayOptions.MonthMargin,
+                    WeekFontSize = config.DisplayOptions.WeekFontSize,
+                    WeekForeground = config.DisplayOptions.WeekForeground,
+                    WeekHorizontalAlignment = config.DisplayOptions.WeekHorizontalAlignment,
+                    WeekMargin = config.DisplayOptions.WeekMargin,
+                    DayFontSize = config.DisplayOptions.DayFontSize,
+                    DayForeground = config.DisplayOptions.DayForeground,
+                    DayHorizontalAlignment = config.DisplayOptions.DayHorizontalAlignment,
+                    DayMargin = config.DisplayOptions.DayMargin,
+                    TimeFontSize = config.DisplayOptions.TimeFontSize,
+                    TimeForeground = config.DisplayOptions.TimeForeground,
+                    TimeHorizontalAlignment = config.DisplayOptions.TimeHorizontalAlignment,
+                    TimeMargin = config.DisplayOptions.TimeMargin,
+                    
+                    TickStroke = Foreground,
+                    TickThickness = 1,
+                    Width = tickWidth,
+                    Height = 60
+                };
+                
+                Canvas.SetLeft(multiTick, i * (tickWidth + spacing) + spacing);
+                Canvas.SetTop(multiTick, 0);
+                
+                TimeScaleCanvas.Children.Add(multiTick);
             }
         }
     }

@@ -49,5 +49,17 @@ namespace GanttChartFramework.Sample
             
             GanttChart.Tasks = tasks;
         }
+        
+        private void CustomTicks_Click(object sender, RoutedEventArgs e)
+        {
+            var customTickWindow = new CustomTickExample();
+            customTickWindow.ShowDialog();
+        }
+        
+        private void MultiLevelTimeScale_Click(object sender, RoutedEventArgs e)
+        {
+            var multiLevelWindow = new MultiLevelTimeScaleExample();
+            multiLevelWindow.ShowDialog();
+        }
     }
 }
