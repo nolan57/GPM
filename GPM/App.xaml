@@ -9,6 +9,129 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+                     
+                    <!-- 全局颜色资源 -->
+                    <Color x:Key="PrimaryColor">#3498db</Color>
+                    <Color x:Key="PrimaryDarkColor">#2980b9</Color>
+                    <Color x:Key="AccentColor">#e74c3c</Color>
+                    <Color x:Key="TextColor">#2c3e50</Color>
+                    <Color x:Key="LightTextColor">#7f8c8d</Color>
+                    <Color x:Key="BackgroundColor">#ecf0f1</Color>
+                    <Color x:Key="CardBackgroundColor">#ffffff</Color>
+                    <Color x:Key="BorderColor">#bdc3c7</Color>
+                    
+                    <!-- 样式资源 -->
+                    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+                    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDarkColor}"/>
+                    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+                    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
+                    <SolidColorBrush x:Key="LightTextBrush" Color="{StaticResource LightTextColor}"/>
+                    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackgroundColor}"/>
+                    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+                    
+                    <!-- 按钮样式 -->
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource PrimaryDarkBrush}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Padding" Value="8,4"/>
+                        <Setter Property="Margin" Value="4"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PrimaryDarkBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource TextBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    
+                    <!-- 标签样式 -->
+                    <Style TargetType="Label">
+                        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="4"/>
+                    </Style>
+                    
+                    <!-- 文本块样式 -->
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                    
+                    <!-- 滚动查看器样式 -->
+                    <Style TargetType="ScrollViewer">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+                    </Style>
+                    
+                    <!-- 阴影效果 -->
+                    <DropShadowEffect x:Key="StandardShadow" BlurRadius="8" Direction="270" ShadowDepth="3" Color="#88000000" Opacity="0.3"/>
+                    <DropShadowEffect x:Key="ButtonShadow" BlurRadius="5" Direction="270" ShadowDepth="2" Color="#88000000" Opacity="0.2"/>
+                    
+                    <!-- 甘特图时间轴按钮样式 -->
+                    <Style x:Key="TimeScaleButtonStyle" TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Padding" Value="10,5"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="3"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource PrimaryDarkBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PrimaryDarkBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

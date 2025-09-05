@@ -3,6 +3,10 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using GanttChartFramework.Models;
+using GPM.Models;
+using GPM.ViewModels;
+using System.Windows.Data;
 
 namespace GPM.Views
 {
@@ -10,52 +14,58 @@ namespace GPM.Views
     {
         #region 依赖属性
         
+        // 数据上下文属性，用于绑定GanttChartViewModel
+        public static readonly DependencyProperty ViewModelProperty = 
+            DependencyProperty.Register("ViewModel", typeof(GanttChartViewModel), typeof(GanttChartView),
+                new PropertyMetadata(null, OnViewModelChanged));
+        
+        
         // 时间轴样式属性
         public static readonly DependencyProperty TimeScaleBackgroundProperty =
             DependencyProperty.Register("TimeScaleBackground", typeof(Brush), typeof(GanttChartView), 
-                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(240, 240, 240))));
+                new PropertyMetadata(new LinearGradientBrush(Color.FromRgb(245, 247, 250), Color.FromRgb(235, 238, 242), 90)));
         
         public static readonly DependencyProperty TimeScaleForegroundProperty =
             DependencyProperty.Register("TimeScaleForeground", typeof(Brush), typeof(GanttChartView), 
-                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(64, 64, 64))));
+                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(45, 62, 80))));
         
         public static readonly DependencyProperty TimeScaleFontSizeProperty =
             DependencyProperty.Register("TimeScaleFontSize", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(12.0));
+                new PropertyMetadata(13.0));
         
         // 网格线样式属性
         public static readonly DependencyProperty GridLineColorProperty =
             DependencyProperty.Register("GridLineColor", typeof(Color), typeof(GanttChartView), 
-                new PropertyMetadata(Color.FromRgb(220, 220, 220)));
+                new PropertyMetadata(Color.FromRgb(230, 236, 241)));
         
         public static readonly DependencyProperty GridLineThicknessProperty =
             DependencyProperty.Register("GridLineThickness", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(1.0));
+                new PropertyMetadata(0.8));
         
         public static readonly DependencyProperty GridLineDashArrayProperty =
             DependencyProperty.Register("GridLineDashArray", typeof(DoubleCollection), typeof(GanttChartView), 
-                new PropertyMetadata(new DoubleCollection { 4, 2 }));
+                new PropertyMetadata(new DoubleCollection { 3, 3 }));
         
         public static readonly DependencyProperty HorizontalGridLineSpacingProperty =
             DependencyProperty.Register("HorizontalGridLineSpacing", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(40.0));
+                new PropertyMetadata(45.0));
         
         // 任务条样式属性
         public static readonly DependencyProperty TaskBarCornerRadiusProperty =
             DependencyProperty.Register("TaskBarCornerRadius", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(6.0));
+                new PropertyMetadata(8.0));
         
         public static readonly DependencyProperty TaskBarBorderThicknessProperty =
             DependencyProperty.Register("TaskBarBorderThickness", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(1.5));
+                new PropertyMetadata(1.0));
         
         public static readonly DependencyProperty TaskBarBorderColorProperty =
             DependencyProperty.Register("TaskBarBorderColor", typeof(Color), typeof(GanttChartView), 
-                new PropertyMetadata(Color.FromRgb(200, 200, 200)));
+                new PropertyMetadata(Color.FromRgb(180, 198, 214)));
         
         public static readonly DependencyProperty TaskLabelFontSizeProperty =
             DependencyProperty.Register("TaskLabelFontSize", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(12.0));
+                new PropertyMetadata(12.5));
         
         public static readonly DependencyProperty TaskLabelForegroundProperty =
             DependencyProperty.Register("TaskLabelForeground", typeof(Brush), typeof(GanttChartView), 
@@ -63,20 +73,20 @@ namespace GPM.Views
         
         public static readonly DependencyProperty TaskLabelFontWeightProperty =
             DependencyProperty.Register("TaskLabelFontWeight", typeof(FontWeight), typeof(GanttChartView), 
-                new PropertyMetadata(FontWeights.SemiBold));
+                new PropertyMetadata(FontWeights.Medium));
         
         // 画布尺寸属性
         public static readonly DependencyProperty CanvasWidthProperty =
             DependencyProperty.Register("CanvasWidth", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(2400.0));
+                new PropertyMetadata(2800.0));
         
         public static readonly DependencyProperty CanvasHeightProperty =
             DependencyProperty.Register("CanvasHeight", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(800.0));
+                new PropertyMetadata(900.0));
         
         public static readonly DependencyProperty CanvasBackgroundProperty =
             DependencyProperty.Register("CanvasBackground", typeof(Brush), typeof(GanttChartView), 
-                new PropertyMetadata(new SolidColorBrush(Color.FromRgb(250, 250, 250))));
+                new PropertyMetadata(new LinearGradientBrush(Color.FromRgb(252, 253, 254), Color.FromRgb(248, 250, 252), 135)));
         
         // 时间粒度属性
         public static readonly DependencyProperty DefaultTimeScaleProperty =
@@ -90,28 +100,44 @@ namespace GPM.Views
         
         public static readonly DependencyProperty HierarchyIndentationProperty =
             DependencyProperty.Register("HierarchyIndentation", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(25.0, OnHierarchySettingsChanged));
+                new PropertyMetadata(30.0, OnHierarchySettingsChanged));
         
         public static readonly DependencyProperty ParentTaskBackgroundProperty =
             DependencyProperty.Register("ParentTaskBackground", typeof(Color), typeof(GanttChartView), 
-                new PropertyMetadata(Color.FromRgb(65, 105, 225))); // RoyalBlue
+                new PropertyMetadata(Color.FromRgb(52, 152, 219))); // SteelBlue
         
         public static readonly DependencyProperty ChildTaskBackgroundProperty =
             DependencyProperty.Register("ChildTaskBackground", typeof(Color), typeof(GanttChartView), 
-                new PropertyMetadata(Color.FromRgb(135, 206, 250))); // LightSkyBlue
+                new PropertyMetadata(Color.FromRgb(85, 172, 238))); // SkyBlue
         
         public static readonly DependencyProperty ParentTaskHeightProperty =
             DependencyProperty.Register("ParentTaskHeight", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(45.0));
+                new PropertyMetadata(48.0));
         
         public static readonly DependencyProperty ChildTaskHeightProperty =
             DependencyProperty.Register("ChildTaskHeight", typeof(double), typeof(GanttChartView), 
-                new PropertyMetadata(35.0));
+                new PropertyMetadata(36.0));
         
         private static void OnHierarchySettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as GanttChartView;
             control?.RedrawTasks();
+        }
+        
+        private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as GanttChartView;
+            if (control != null && e.NewValue is GanttChartViewModel viewModel)
+            {
+                // 监听Tasks集合变化
+                viewModel.Tasks.CollectionChanged += (sender, args) =>
+                {
+                    control.UpdateGanttChartData();
+                };
+                
+                // 初始加载数据
+                control.UpdateGanttChartData();
+            }
         }
         
         private static void OnDefaultTimeScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -121,8 +147,13 @@ namespace GPM.Views
         }
         
         #endregion
-        
         #region 属性包装器
+        
+        public GanttChartViewModel ViewModel
+        {
+            get => (GanttChartViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
         
         public Brush TimeScaleBackground
         {
@@ -267,313 +298,99 @@ namespace GPM.Views
         public GanttChartView()
         {
             InitializeComponent();
-            InitializeCanvas();
-            InitializeTimeScale();
-            DrawSampleTasks();
+            
+            // 设置数据上下文绑定
+            this.DataContextChanged += (sender, e) =>
+            {
+                if (e.NewValue is GanttChartViewModel viewModel)
+                {
+                    ViewModel = viewModel;
+                }
+            };
         }
         
-        private void InitializeCanvas()
+        private void UpdateGanttChartData()
         {
-            // 使用依赖属性设置画布尺寸和背景
-            GanttCanvas.Width = CanvasWidth;
-            GanttCanvas.Height = CanvasHeight;
-            GanttCanvas.Background = CanvasBackground;
+            if (ViewModel == null || ViewModel.Tasks == null || GanttContainer == null || GanttContainer.TaskBars == null)
+                return;
             
-            TimeScaleCanvas.Width = CanvasWidth;
-            TimeScaleCanvas.Background = TimeScaleBackground;
+            // 将GPM的Task模型转换为GPM.Views.TaskItem模型
+            var taskItems = new List<TaskItem>();
+            int itemId = 1;
             
-            TaskCanvas.Width = CanvasWidth;
-            TaskCanvas.Height = CanvasHeight - 30; // 减去时间轴高度
-        }
-
-        private void InitializeTimeScale()
-        {
-            TimeScaleCanvas.Children.Clear();
-            
-            // 根据默认时间粒度绘制时间轴
-            switch (DefaultTimeScale)
+            foreach (var task in ViewModel.Tasks)
             {
-                case "Day":
-                    DrawDailyTimeScale();
-                    break;
+                // 添加主任务
+                var mainTaskItem = new TaskItem
+                {
+                    Id = itemId++, 
+                    Name = task.Name,
+                    StartDay = (int)((task.StartDate - DateTime.Now.Date).TotalDays) + 1, // 转换为相对天数
+                    Duration = (task.EndDate - task.StartDate).Days,
+                    Progress = task.Progress * 100, // 转换为百分比
+                    ParentId = null,
+                    Color = ParentTaskBackground // 直接使用Color类型
+                };
+                taskItems.Add(mainTaskItem);
+                
+                // 添加子任务
+                foreach (var subtask in task.SubTasks)
+                {
+                    var subTaskItem = new TaskItem
+                    {
+                        Id = itemId++, 
+                        Name = subtask.Name,
+                        StartDay = (int)((subtask.StartDate - DateTime.Now.Date).TotalDays) + 1, // 转换为相对天数
+                        Duration = (subtask.EndDate - subtask.StartDate).Days,
+                        Progress = subtask.Progress * 100, // 转换为百分比
+                        ParentId = mainTaskItem.Id,
+                        Color = ChildTaskBackground // 直接使用Color类型
+                    };
+                    taskItems.Add(subTaskItem);
+                }
+            }
+            
+            // 将转换后的数据设置到TaskBarControl
+            GanttContainer.TaskBars.Tasks = taskItems;
+            GanttContainer.TaskBars.IsHierarchical = true;
+            
+            // 设置时间刻度类型
+            string timeScaleType = "日";
+            switch (ViewModel.SelectedTimeScale)
+            {
                 case "Week":
-                    DrawWeeklyTimeScale();
+                    timeScaleType = "周";
                     break;
                 case "Month":
-                    DrawMonthlyTimeScale();
+                    timeScaleType = "月";
                     break;
                 case "Quarter":
-                    DrawQuarterlyTimeScale();
+                    timeScaleType = "季";
+                    break;
+                default:
+                    timeScaleType = "日";
                     break;
             }
             
-            // 绘制网格线
-            DrawGridLines();
-        }
-
-        private void RedrawTasks()
-        {
-            // 清除现有任务
-            TaskCanvas.Children.Clear();
-            
-            // 重新绘制示例任务
-            DrawSampleTasks();
+            GanttContainer.TimeScaleType = timeScaleType;
+            GanttContainer.TaskBars.TimeScaleType = timeScaleType;
         }
         
-        private void DrawSampleTasks()
-        {
-            if (ShowTaskHierarchy)
-            {
-                // 层次化显示：父任务和子任务（垂直方向上下覆盖）
-                DrawTaskBar("父任务1", 50, 50, 300, ParentTaskHeight, ParentTaskBackground, true);
-                DrawTaskBar("子任务1.1", 50 + HierarchyIndentation, 50 + ParentTaskHeight + 5, 200, ChildTaskHeight, ChildTaskBackground, false);
-                DrawTaskBar("子任务1.2", 260 + HierarchyIndentation, 50 + ParentTaskHeight + 5, 90, ChildTaskHeight, ChildTaskBackground, false);
-                
-                // 第二个父任务组，垂直方向与第一个组重叠显示
-                DrawTaskBar("父任务2", 150, 80, 250, ParentTaskHeight, ParentTaskBackground, true);
-                DrawTaskBar("子任务2.1", 150 + HierarchyIndentation, 80 + ParentTaskHeight + 5, 180, ChildTaskHeight, ChildTaskBackground, false);
-                
-                // 第三个父任务组，展示更复杂的垂直覆盖
-                DrawTaskBar("父任务3", 400, 40, 350, ParentTaskHeight, ParentTaskBackground, true);
-                DrawTaskBar("子任务3.1", 400 + HierarchyIndentation, 40 + ParentTaskHeight + 5, 120, ChildTaskHeight, ChildTaskBackground, false);
-                DrawTaskBar("子任务3.2", 530 + HierarchyIndentation, 40 + ParentTaskHeight + 5, 100, ChildTaskHeight, ChildTaskBackground, false);
-                DrawTaskBar("子任务3.3", 640 + HierarchyIndentation, 40 + ParentTaskHeight + 5, 110, ChildTaskHeight, ChildTaskBackground, false);
-            }
-            else
-            {
-                // 普通显示：所有任务在同一层级
-                DrawTaskBar("任务1", 50, 50, 200, 35, Color.FromRgb(70, 130, 180), false); // SteelBlue
-                DrawTaskBar("任务2", 150, 100, 300, 35, Color.FromRgb(60, 179, 113), false); // MediumSeaGreen
-                DrawTaskBar("任务3", 300, 150, 180, 35, Color.FromRgb(255, 165, 0), false);  // Orange
-            }
-        }
-
-        private void DrawTaskBar(string taskName, double startX, double startY, double width, double height, Color color, bool isParentTask)
-        {
-            // 绘制任务矩形
-            var taskRect = new Rectangle
-            {
-                Width = width,
-                Height = height,
-                Fill = new SolidColorBrush(color),
-                Stroke = new SolidColorBrush(TaskBarBorderColor),
-                StrokeThickness = TaskBarBorderThickness,
-                RadiusX = TaskBarCornerRadius,
-                RadiusY = TaskBarCornerRadius
-            };
-            
-            Canvas.SetLeft(taskRect, startX);
-            Canvas.SetTop(taskRect, startY);
-            
-            // 添加任务名称标签
-            var taskLabel = new TextBlock
-            {
-                Text = taskName,
-                FontSize = isParentTask ? TaskLabelFontSize + 2 : TaskLabelFontSize,
-                Foreground = TaskLabelForeground,
-                FontWeight = isParentTask ? FontWeights.Bold : TaskLabelFontWeight
-            };
-            
-            Canvas.SetLeft(taskLabel, startX + 5);
-            Canvas.SetTop(taskLabel, startY + (height - taskLabel.FontSize) / 2);
-            
-            TaskCanvas.Children.Add(taskRect);
-            TaskCanvas.Children.Add(taskLabel);
-        }
-
-        private void TimeScaleButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is string timeScale)
-            {
-                // 清除现有时间轴
-                TimeScaleCanvas.Children.Clear();
-                
-                // 根据选择的时间粒度重新绘制时间轴
-                switch (timeScale)
-                {
-                    case "Day":
-                        DrawDailyTimeScale();
-                        break;
-                    case "Week":
-                        DrawWeeklyTimeScale();
-                        break;
-                    case "Month":
-                        DrawMonthlyTimeScale();
-                        break;
-                    case "Quarter":
-                        DrawQuarterlyTimeScale();
-                        break;
-                }
-                
-                // 重新绘制网格线
-                DrawGridLines();
-            }
-        }
-
-        private void DrawDailyTimeScale()
-        {
-            for (int i = 0; i < 30; i++)
-            {
-                var dayLine = new Line
-                {
-                    X1 = i * 60 + 50,
-                    Y1 = 0,
-                    X2 = i * 60 + 50,
-                    Y2 = 30,
-                    Stroke = TimeScaleForeground,
-                    StrokeThickness = 1
-                };
-                
-                var dayLabel = new TextBlock
-                {
-                    Text = (i + 1).ToString(),
-                    FontSize = TimeScaleFontSize,
-                    Foreground = TimeScaleForeground,
-                    Margin = new Thickness(i * 60 + 45, 15, 0, 0)
-                };
-                
-                TimeScaleCanvas.Children.Add(dayLine);
-                TimeScaleCanvas.Children.Add(dayLabel);
-            }
-        }
-
-        private void DrawWeeklyTimeScale()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                var weekLine = new Line
-                {
-                    X1 = i * 150 + 50,
-                    Y1 = 0,
-                    X2 = i * 150 + 50,
-                    Y2 = 30,
-                    Stroke = TimeScaleForeground,
-                    StrokeThickness = 2
-                };
-                
-                var weekLabel = new TextBlock
-                {
-                    Text = $"第{i + 1}周",
-                    FontSize = TimeScaleFontSize,
-                    Foreground = TimeScaleForeground,
-                    Margin = new Thickness(i * 150 + 30, 15, 0, 0)
-                };
-                
-                TimeScaleCanvas.Children.Add(weekLine);
-                TimeScaleCanvas.Children.Add(weekLabel);
-            }
-        }
-
-        private void DrawMonthlyTimeScale()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                var monthLine = new Line
-                {
-                    X1 = i * 200 + 50,
-                    Y1 = 0,
-                    X2 = i * 200 + 50,
-                    Y2 = 30,
-                    Stroke = TimeScaleForeground,
-                    StrokeThickness = 2
-                };
-                
-                var monthLabel = new TextBlock
-                {
-                    Text = $"{i + 1}月",
-                    FontSize = TimeScaleFontSize,
-                    Foreground = TimeScaleForeground,
-                    Margin = new Thickness(i * 200 + 80, 15, 0, 0)
-                };
-                
-                TimeScaleCanvas.Children.Add(monthLine);
-                TimeScaleCanvas.Children.Add(monthLabel);
-            }
-        }
-
-        private void DrawQuarterlyTimeScale()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                var quarterLine = new Line
-                {
-                    X1 = i * 150 + 50,
-                    Y1 = 0,
-                    X2 = i * 150 + 50,
-                    Y2 = 30,
-                    Stroke = TimeScaleForeground,
-                    StrokeThickness = 3
-                };
-                
-                var quarterLabel = new TextBlock
-                {
-                    Text = $"Q{i + 1}",
-                    FontSize = TimeScaleFontSize,
-                    Foreground = TimeScaleForeground,
-                    Margin = new Thickness(i * 150 + 65, 15, 0, 0)
-                };
-                
-                TimeScaleCanvas.Children.Add(quarterLine);
-                TimeScaleCanvas.Children.Add(quarterLabel);
-            }
-        }
+        // 这些方法保留为空以保持向后兼容性
+        private void InitializeCanvas() { }
+        private void InitializeTimeScale() { }
+        private void RedrawTasks() { }
+        private void DrawSampleTasks() { }
+        private void DrawTaskBar(string taskName, double startX, double startY, double width, double height, Color color, bool isParentTask) { }
+        private void DrawDailyTimeScale() { }
+        private void DrawWeeklyTimeScale() { }
+        private void DrawMonthlyTimeScale() { }
+        private void DrawQuarterlyTimeScale() { }
+        private void DrawGridLines() { }
         
-        /// <summary>
-        /// 绘制网格线组件
-        /// </summary>
-        private void DrawGridLines()
+        private void TimeScaleButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            // 清除现有网格线
-            var gridLinesToRemove = new List<UIElement>();
-            foreach (UIElement element in TaskCanvas.Children)
-            {
-                if (element is Line line && line.Tag?.ToString() == "GridLine")
-                {
-                    gridLinesToRemove.Add(element);
-                }
-            }
-            
-            foreach (var element in gridLinesToRemove)
-            {
-                TaskCanvas.Children.Remove(element);
-            }
-            
-            // 绘制垂直网格线（与时间轴刻度对齐）
-            for (int i = 0; i < 30; i++)
-            {
-                var gridLine = new Line
-                {
-                    X1 = i * 60 + 50,
-                    Y1 = 0,
-                    X2 = i * 60 + 50,
-                    Y2 = CanvasHeight - 30,
-                    Stroke = new SolidColorBrush(GridLineColor),
-                    StrokeThickness = GridLineThickness,
-                    StrokeDashArray = GridLineDashArray,
-                    Tag = "GridLine"
-                };
-                
-                TaskCanvas.Children.Insert(0, gridLine); // 插入到最底层
-            }
-            
-            // 绘制水平网格线
-            int horizontalLineCount = (int)((CanvasHeight - 30) / HorizontalGridLineSpacing);
-            for (int i = 1; i <= horizontalLineCount; i++)
-            {
-                var horizontalGridLine = new Line
-                {
-                    X1 = 0,
-                    Y1 = i * HorizontalGridLineSpacing,
-                    X2 = CanvasWidth,
-                    Y2 = i * HorizontalGridLineSpacing,
-                    Stroke = new SolidColorBrush(GridLineColor),
-                    StrokeThickness = GridLineThickness,
-                    StrokeDashArray = GridLineDashArray,
-                    Tag = "GridLine"
-                };
-                
-                TaskCanvas.Children.Insert(0, horizontalGridLine); // 插入到最底层
-            }
+            // 时间轴选择逻辑现在由 GanttChartContainer 处理
         }
     }
 }

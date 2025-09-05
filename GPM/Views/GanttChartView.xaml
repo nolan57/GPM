@@ -17,29 +17,33 @@
         </Grid.RowDefinitions>
         
         <!-- 时间轴控制栏 -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-            <Button Content="日" Margin="5" Click="TimeScaleButton_Click" Tag="Day"/>
-            <Button Content="周" Margin="5" Click="TimeScaleButton_Click" Tag="Week"/>
-            <Button Content="月" Margin="5" Click="TimeScaleButton_Click" Tag="Month"/>
-            <Button Content="季度" Margin="5" Click="TimeScaleButton_Click" Tag="Quarter"/>
-        </StackPanel>
-        
-        <!-- 甘特图主体区域 -->
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Canvas x:Name="GanttCanvas" Width="{Binding CanvasWidth, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}" 
-                    Height="{Binding CanvasHeight, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}" 
-                    Background="{Binding CanvasBackground, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}">
-                <!-- 时间轴刻度 -->
-                <Canvas x:Name="TimeScaleCanvas" Height="30" 
-                        Width="{Binding CanvasWidth, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}" 
-                        Background="{Binding TimeScaleBackground, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"/>
-                
-                <!-- 任务区域 -->
-                <Canvas x:Name="TaskCanvas" 
-                        Height="{Binding CanvasHeight, Converter={StaticResource SubtractConverter}, ConverterParameter=30, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}" 
-                        Width="{Binding CanvasWidth, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}" 
-                        Margin="0,30,0,0"/>
-            </Canvas>
-        </ScrollViewer>
+        <Border Grid.Row="0" Background="White" CornerRadius="4" Effect="{DynamicResource StandardShadow}" Margin="10" Padding="5">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="日" Style="{StaticResource TimeScaleButtonStyle}" Click="TimeScaleButton_Click" Tag="Day"/>
+                <Button Content="周" Style="{StaticResource TimeScaleButtonStyle}" Click="TimeScaleButton_Click" Tag="Week"/>
+                <Button Content="月" Style="{StaticResource TimeScaleButtonStyle}" Click="TimeScaleButton_Click" Tag="Month"/>
+                <Button Content="季度" Style="{StaticResource TimeScaleButtonStyle}" Click="TimeScaleButton_Click" Tag="Quarter"/>
+            </StackPanel>
+        </Border>
+   <!-- 甘特图主体区域 -->
+        <Grid Grid.Row="1" Margin="10">
+            <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Effect="{DynamicResource StandardShadow}">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="Transparent">
+                    <local:GanttChartContainer 
+                        x:Name="GanttContainer"
+                        CanvasWidth="{Binding CanvasWidth, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        CanvasHeight="{Binding CanvasHeight, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        CanvasBackground="{Binding CanvasBackground, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        DefaultTimeScale="{Binding DefaultTimeScale, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        ShowTaskHierarchy="{Binding ShowTaskHierarchy, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        HierarchyIndentation="{Binding HierarchyIndentation, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        ParentTaskBackground="{Binding ParentTaskBackground, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        ChildTaskBackground="{Binding ChildTaskBackground, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        ParentTaskHeight="{Binding ParentTaskHeight, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                        ChildTaskHeight="{Binding ChildTaskHeight, RelativeSource={RelativeSource AncestorType=local:GanttChartView}}"
+                    />
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
